@@ -2,7 +2,7 @@ import React from 'react'
 import { View, Text, StyleSheet, Button } from 'react-native'
 import { MaterialIcons } from '@expo/vector-icons'
 import { CustomStyles } from '../../customStyles/CustomStyles'
-import confirm from '../../components/Alerts'
+import { confirm } from '../../components/Alerts'
 
 const CategoryItem = ({
   id,

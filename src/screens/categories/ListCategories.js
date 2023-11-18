@@ -1,7 +1,14 @@
 import React, { useState, useEffect } from 'react'
 import { ScrollView, View, ActivityIndicator, SafeAreaView } from 'react-native'
 import { app } from '../../../firebaseConfig'
-import { getDatabase, ref, onValue, push, update } from 'firebase/database'
+import {
+  getDatabase,
+  ref,
+  onValue,
+  push,
+  update,
+  remove
+} from 'firebase/database'
 import FooterOptions from '../../components/FooterOptions'
 import CategoryItem from './CategoryItem'
 
@@ -20,14 +27,6 @@ const ListCategories = ({ navigation }) => {
       }
     )
   }, [])
-
-  function putCategory({ id, data }) {
-    console.log('Update Category, with description: ' + data.nombre)
-    console.log('Update Category, with id: ' + id)
-    data.nombre !== '' && id !== '' && id !== undefined
-      ? update(ref(dbFirebase, `/administracion/categorias/${id}`), data)
-      : console.log('No se pudo crear actualizar categoria!')
-  }
 
   validateCategory = (newCategory) => {
     if (newCategory !== undefined && newCategory !== null) {
@@ -49,6 +48,21 @@ const ListCategories = ({ navigation }) => {
     console.log('La categoria a guardar es: ' + JSON.stringify(newCategory))
   }
 
+  function putCategory({ id, data }) {
+    console.log('Update Category, with description: ' + data.nombre)
+    console.log('Update Category, with id: ' + id)
+    data.nombre !== '' && id !== '' && id !== undefined
+      ? update(ref(dbFirebase, `/administracion/categorias/${id}`), data)
+      : console.log('No se pudo crear actualizar categoria!')
+  }
+
+  function removeCategory(id) {
+    console.log('Delete Category, with id: ' + id)
+    id !== '' && id !== undefined
+      ? remove(ref(dbFirebase, `/administracion/categorias/${id}`))
+      : console.log('No se pudo crear eliminar la categoria!')
+  }
+
   function GetAllCategories() {
     return (
       <ScrollView>
@@ -63,6 +77,7 @@ const ListCategories = ({ navigation }) => {
                   navigation={navigation}
                   db={dbFirebase}
                   putFunction={putCategory}
+                  deleteFunction={removeCategory}
                 />
               )
             })
