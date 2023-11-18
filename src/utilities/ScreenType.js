@@ -28,5 +28,17 @@ export const screenType = {
     name: 'Editar Cliente',
     iconName: 'add',
     location: require('../screens/clients/EditClient')
+  },
+  'List Products': {
+    name: 'Listar Products',
+    location: require('../screens/products/ListProducts')
+  },
+  'Create Product': {
+    name: 'Crear Producto',
+    location: require('../screens/products/CreateProduct')
+  },
+  'Edit Product': {
+    name: 'Editar Producto',
+    location: require('../screens/products/EditProduct')
   }
 }

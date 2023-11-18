@@ -1,11 +1,23 @@
 import React from 'react'
-import { View, Text } from 'react-native'
+import { NavigationContainer } from '@react-navigation/native'
+import MyStack from '../../components/Stack'
 
 const Products = () => {
+  const listScreens = [
+    {
+      key: 'List Products'
+    },
+    {
+      key: 'Create Product'
+    },
+    {
+      key: 'Edit Product'
+    }
+  ]
   return (
-    <View>
-      <Text>Products</Text>
-    </View>
+    <NavigationContainer independent={true}>
+      <MyStack listScreens={listScreens} />
+    </NavigationContainer>
   )
 }
 
