@@ -3,13 +3,12 @@ import { TouchableOpacity } from 'react-native'
 import { CustomStyles } from '../customStyles/CustomStyles'
 import { MaterialIcons } from '@expo/vector-icons'
 
-const FooterOptions = ({ navigation, db, screenTypeName, extraData }) => {
+const FooterOptions = ({ navigation, screenTypeName, extraData }) => {
   return (
     <TouchableOpacity
       style={CustomStyles.createButton}
       onPress={() =>
         navigation.navigate(screenTypeName, {
-          db: db,
           extraData: extraData ? extraData : null
         })
       }
