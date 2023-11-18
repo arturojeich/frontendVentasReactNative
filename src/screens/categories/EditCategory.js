@@ -1,36 +1,38 @@
+import '../../utilities/ignoreWarnings'
 import React, { useState } from 'react'
 import { View, Text, TextInput, ScrollView, Button } from 'react-native'
 import { ref, update } from 'firebase/database'
 import { CustomStyles } from '../../customStyles/CustomStyles'
 
-const EditCategory = ({ route, navigation, db }) => {
+const EditCategory = ({ route, navigation }) => {
+  const { id, oldNombre, putFunction } = route.params
+  let [labelText, setLabelText] = useState(oldNombre)
   let inputText = ''
-  const { id, oldDescripcion } = route.params
+
+  handleLabel = (text) => {
+    setLabelText(text)
+  }
 
   handleInputText = (text) => {
     inputText = text
   }
 
-  function putCategory({ id, data }) {
-    console.log('Update Category, with description: ' + data.descripcion)
-    console.log('Update Category, with id: ' + id)
-    data.descripcion !== '' && id !== '' && id !== undefined
-      ? update(ref(db, `/administracion/categorias/${id}`), data)
-      : console.log('No se pudo crear actualizar categoria!')
+  inputTextClear = () => {
+    this.textInput.clear()
   }
 
   return (
     <ScrollView contentContainerStyle={CustomStyles.contentContainer}>
       <View style={CustomStyles.inputContainer}>
-        <Text style={CustomStyles.label}>Descripción Actual</Text>
-        <Text style={CustomStyles.textInput}>{oldDescripcion}</Text>
-        <Text style={CustomStyles.label}>Descripción Nueva</Text>
+        <Text style={CustomStyles.label}>Nombre Actual</Text>
+        <Text style={CustomStyles.textInput}>{labelText}</Text>
+        <Text style={CustomStyles.label}>Nombre Nuevo</Text>
         <TextInput
           ref={(input) => {
             this.textInput = input
           }}
           style={CustomStyles.textInput}
-          placeholder="Por ejemplo, 'Oftalmología'"
+          placeholder="Por ejemplo, 'Minutas'"
           onChangeText={(x) => handleInputText(x)}
           defaultValue={inputText}
         />
@@ -40,10 +42,15 @@ const EditCategory = ({ route, navigation, db }) => {
           <Button
             title="Actualizar"
             onPress={() => {
-              putCategory({
+              putFunction({
                 id: id,
-                data: { descripcion: inputText }
-              })
+                data: {
+                  nombre: inputText
+                }
+              }),
+                handleLabel(inputText),
+                handleInputText(''),
+                inputTextClear()
             }}
             color={CustomStyles.colors.mainBackground}
           />
