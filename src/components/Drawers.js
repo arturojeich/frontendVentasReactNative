@@ -81,6 +81,15 @@ const Drawers = () => {
           )
         }}
       />
+      <Drawer.Screen
+          name="Ventas"
+          component={Sales}
+          options={{
+            drawerIcon: () => (
+              <MaterialIcons name="receipt" size={24} color="black" />
+            )
+          }}
+        />
     </Drawer.Navigator>
   )
 }

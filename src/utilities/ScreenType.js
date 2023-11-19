@@ -34,5 +34,13 @@ export const screenType = {
   'Edit Product': {
     name: 'Editar Producto',
     location: require('../screens/products/EditProduct')
+  },
+  'List Sales': {
+      name: 'Listar Ventas',
+      location: require('../screens/sales/ListSales')
+  },
+  'Create Sale': {
+    name: 'Crear Venta',
+    location: require('../screens/sales/CreateSale')
   }
 }
