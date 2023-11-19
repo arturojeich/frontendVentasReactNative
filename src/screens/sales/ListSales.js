@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { ScrollView, View, ActivityIndicator, SafeAreaView } from 'react-native'
+import { ScrollView, View, ActivityIndicator, SafeAreaView, TouchableOpacity } from 'react-native'
 import { app } from '../../../firebaseConfig'
 import {
   getDatabase,
@@ -11,7 +11,11 @@ import {
 } from 'firebase/database'
 import FooterOptions from '../../components/FooterOptions'
 import SaleItem from './SaleItem'
+import { CustomStyles } from '../../customStyles/CustomStyles'
 import { confirm, error } from '../../components/Alerts'
+import { printToFileAsync } from 'expo-print'
+import { shareAsync } from 'expo-sharing'
+import { MaterialIcons } from '@expo/vector-icons'
 
 const ListSales = ({ navigation }) => {
   const [dbFirebase, setDBFirebase] = useState(getDatabase(app))
@@ -68,39 +72,49 @@ const ListSales = ({ navigation }) => {
     console.log('La venta a guardar es: ' + JSON.stringify(newSale))
   }
 
-  /*validatePutProduct = (newSale) => {
-    if (newSale !== undefined && newSale !== null) {
-      if (
-        newSale.categoria ||
-        newSale.codigo ||
-        newSale.nombre ||
-        newSale.precio
-      ) {
-        return true
-      }
-    }
-    return false
-  }*/
+/*function GetAllSalesExport() {
+    let recordsArray = [];
 
-  /*function putProduct(
-    id,
-    newSale,
-    setCategory,
-    setLabelCodigo,
-    setLabelNombre,
-    setLabelPrecio
-  ) {
-    if (validatePutProduct(newSale)) {
-      update(ref(dbFirebase, `/administracion/productos/${id}`), newSale)
-      newSale.nombre && setLabelNombre(newSale.nombre)
-      newSale.categoria && setCategory(newSale.categoria)
-      newSale.codigo && setLabelCodigo(newSale.codigo)
-      newSale.precio && setLabelPrecio(newSale.precio)
-    } else {
-      console.log('No se pudo actualizar el registro!')
+    salesKeys.forEach((key) => {
+        recordsArray.push({
+            nroFactura: salesList[key].nroFactura,
+            fecha: salesList[key].fecha,
+            cantidad: salesList[key].cantidad,
+            producto: productsList[salesList[key].producto].nombre,
+            total: salesList[key].total,
+        });
     }
-    console.log('El Producto a actualizar es: ' + JSON.stringify(newSale))
-  }*/
+    return recordsArray;
+}*/
+
+
+
+function generateHTML(recordsArray) {
+    let html = '<html><body>';
+    console.log("Array de records: " + recordsArray[0])
+    recordsArray.forEach((record) => {
+        html += `<h1>Número de Factura: ${record.nroFactura}</h1>`;
+        html += `<p>Fecha: ${record.fecha}</p>`;
+        html += `<p>Producto: ${record.producto}</p>`;
+        html += `<p>Cantidad: ${record.cantidad}</p>`;
+        html += `<p>Total: ${record.total}</p>`;
+    });
+    html += '</body></html>';
+    return html;
+}
+
+
+    let createPDF = async () => {
+      //const html = generateHTML(GetAllSalesExport())
+      const html = generateHTML(salesList)
+      const file = await printToFileAsync({
+            html: html,
+            base64: false
+          });
+
+          await shareAsync(file.uri);
+    };
+
 
   function removeSale(id) {
     console.log('Delete Venta, with id: ' + id)
@@ -147,6 +161,15 @@ const ListSales = ({ navigation }) => {
           productsKey: productsKey
         }}
       />
+      <TouchableOpacity
+      style={[
+        CustomStyles.createButton,
+        { right: 30, bottom: 100, backgroundColor: 'blue' } // adjust the position and color as needed
+        ]}
+        onPress={createPDF}
+         >
+         <MaterialIcons name="picture-as-pdf" size={50} color="white" />
+      </TouchableOpacity>
     </SafeAreaView>
   )
 }
