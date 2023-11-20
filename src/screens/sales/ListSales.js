@@ -85,7 +85,7 @@ const ListSales = ({ navigation }) => {
     console.log('La venta a guardar es: ' + JSON.stringify(newSale))
   }
 
-/*function GetAllSalesExport() {
+function GetAllSalesExport() {
     let recordsArray = [];
 
     salesKeys.forEach((key) => {
@@ -95,37 +95,60 @@ const ListSales = ({ navigation }) => {
             cantidad: salesList[key].cantidad,
             producto: productsList[salesList[key].producto].nombre,
             total: salesList[key].total,
+            cliente: clientsList[salesList[key].cliente].nombre
         });
-    }
-    return recordsArray;
-}*/
+    });
 
+    // Agrupar por número de factura
+    let groupedByInvoice = recordsArray.reduce((acc, record) => {
+        if (!acc[record.nroFactura]) {
+            acc[record.nroFactura] = [];
+        }
+        acc[record.nroFactura].push(record);
+        return acc;
+    }, {});
+    console.log(groupedByInvoice)
+
+    return groupedByInvoice;
+}
+
+
+
+
+    //return recordsArray;
+//}
 
 
 function generateHTML(recordsArray) {
     let html = '<html><body>';
     console.log("Array de records: " + recordsArray[0])
-    recordsArray.forEach((record) => {
-        html += `<h1>Número de Factura: ${record.nroFactura}</h1>`;
-        html += `<p>Fecha: ${record.fecha}</p>`;
-        html += `<p>Producto: ${record.producto}</p>`;
-        html += `<p>Cantidad: ${record.cantidad}</p>`;
-        html += `<p>Total: ${record.total}</p>`;
+    let recordKeys = Object.keys(recordsArray)
+    recordKeys.forEach((key) => {
+        html += `<h1>Número de Factura: ${key}</h1>`;
+        recordsArray[key].forEach((record) => {
+            html += `<p>Fecha: ${record.fecha}</p>`;
+            html += `<p>Producto: ${record.producto}</p>`;
+            html += `<p>Cantidad: ${record.cantidad}</p>`;
+            html += `<p>Total: ${record.total}</p>`;
+            html += `<p>Cliente: ${record.cliente}</p>`;
+            html += `<br>  </br>`;
+        });
     });
     html += '</body></html>';
     return html;
 }
 
 
+
     let createPDF = async () => {
-      //const html = generateHTML(GetAllSalesExport())
-      const html = generateHTML(salesList)
+      const html = generateHTML(GetAllSalesExport())
+      //const html = generateHTML(salesList)
       const file = await printToFileAsync({
             html: html,
             base64: false
           });
 
-          await shareAsync(file.uri);
+      await shareAsync(file.uri);
     };
 
 
