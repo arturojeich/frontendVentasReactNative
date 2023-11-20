@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from 'react'
-import { ScrollView, View, ActivityIndicator, SafeAreaView, TouchableOpacity } from 'react-native'
+import {
+  ScrollView,
+  View,
+  ActivityIndicator,
+  SafeAreaView,
+  TouchableOpacity
+} from 'react-native'
 import { app } from '../../../firebaseConfig'
 import {
   getDatabase,
@@ -13,8 +19,6 @@ import FooterOptions from '../../components/FooterOptions'
 import SaleItem from './SaleItem'
 import { CustomStyles } from '../../customStyles/CustomStyles'
 import { confirm, error } from '../../components/Alerts'
-import { printToFileAsync } from 'expo-print'
-import { shareAsync } from 'expo-sharing'
 import { MaterialIcons } from '@expo/vector-icons'
 
 const ListSales = ({ navigation }) => {
@@ -44,20 +48,20 @@ const ListSales = ({ navigation }) => {
         let data = querySnapShot.val() || {}
         let itemList = { ...data }
         setProductsList(itemList)
-      },
+      }
     )
   }, [])
 
-    useEffect(() => {
-        return onValue(
-          ref(dbFirebase, '/administracion/clientes'),
-          (querySnapShot) => {
-            let data = querySnapShot.val() || {}
-            let itemList = { ...data }
-            setClientsList(itemList)
-          },
-        )
-      }, [])
+  useEffect(() => {
+    return onValue(
+      ref(dbFirebase, '/administracion/clientes'),
+      (querySnapShot) => {
+        let data = querySnapShot.val() || {}
+        let itemList = { ...data }
+        setClientsList(itemList)
+      }
+    )
+  }, [])
 
   validatePostSale = (newSale) => {
     if (newSale !== undefined && newSale !== null) {
@@ -84,73 +88,6 @@ const ListSales = ({ navigation }) => {
       : console.log('No se pudo agregar una nueva venta!')
     console.log('La venta a guardar es: ' + JSON.stringify(newSale))
   }
-
-function GetAllSalesExport() {
-    let recordsArray = [];
-
-    salesKeys.forEach((key) => {
-        recordsArray.push({
-            nroFactura: salesList[key].nroFactura,
-            fecha: salesList[key].fecha,
-            cantidad: salesList[key].cantidad,
-            producto: productsList[salesList[key].producto].nombre,
-            total: salesList[key].total,
-            cliente: clientsList[salesList[key].cliente].nombre
-        });
-    });
-
-    // Agrupar por número de factura
-    let groupedByInvoice = recordsArray.reduce((acc, record) => {
-        if (!acc[record.nroFactura]) {
-            acc[record.nroFactura] = [];
-        }
-        acc[record.nroFactura].push(record);
-        return acc;
-    }, {});
-    console.log(groupedByInvoice)
-
-    return groupedByInvoice;
-}
-
-
-
-
-    //return recordsArray;
-//}
-
-
-function generateHTML(recordsArray) {
-    let html = '<html><body>';
-    console.log("Array de records: " + recordsArray[0])
-    let recordKeys = Object.keys(recordsArray)
-    recordKeys.forEach((key) => {
-        html += `<h1>Número de Factura: ${key}</h1>`;
-        recordsArray[key].forEach((record) => {
-            html += `<p>Fecha: ${record.fecha}</p>`;
-            html += `<p>Producto: ${record.producto}</p>`;
-            html += `<p>Cantidad: ${record.cantidad}</p>`;
-            html += `<p>Total: ${record.total}</p>`;
-            html += `<p>Cliente: ${record.cliente}</p>`;
-            html += `<br>  </br>`;
-        });
-    });
-    html += '</body></html>';
-    return html;
-}
-
-
-
-    let createPDF = async () => {
-      const html = generateHTML(GetAllSalesExport())
-      //const html = generateHTML(salesList)
-      const file = await printToFileAsync({
-            html: html,
-            base64: false
-          });
-
-      await shareAsync(file.uri);
-    };
-
 
   function removeSale(id) {
     console.log('Delete Venta, with id: ' + id)
@@ -202,13 +139,22 @@ function generateHTML(recordsArray) {
         }}
       />
       <TouchableOpacity
-      style={[
-        CustomStyles.createButton,
-        { right: 30, bottom: 100, backgroundColor: 'blue' } // adjust the position and color as needed
+        style={[
+          CustomStyles.createButton,
+          { right: 30, bottom: 100, backgroundColor: 'green' } // adjust the position and color as needed
         ]}
-        onPress={createPDF}
-         >
-         <MaterialIcons name="picture-as-pdf" size={50} color="white" />
+        //onPress={createPDF}
+        onPress={() => {
+          navigation.navigate('Seleccionar Cliente', {
+            salesKeys: salesKeys,
+            salesList: salesList,
+            clientsKeys: clientsKeys,
+            clientsList: clientsList,
+            productsList: productsList
+          })
+        }}
+      >
+        <MaterialIcons name="account-balance-wallet" size={50} color="white" />
       </TouchableOpacity>
     </SafeAreaView>
   )

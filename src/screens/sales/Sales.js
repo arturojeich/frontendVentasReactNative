@@ -9,7 +9,14 @@ const Sales = () => {
     },
     {
       key: 'Create Sale'
-    }//,
+    },
+    {
+      key: 'Select Client'
+    },
+    {
+      key: 'Invoice'
+    }
+    //,
     //{
     //  key: 'Edit Product'
     //}

@@ -36,11 +36,15 @@ const SaleItem = ({
         <Text style={[titleTheme]}>Total</Text>
         <Text style={[textTheme]}>{total}</Text>
         <Text style={[titleTheme]}>Producto</Text>
-        <Text style={[textTheme]}>{productsList[producto] ? productsList[producto].nombre : "Nulo"}</Text>
+        <Text style={[textTheme]}>
+          {productsList[producto] ? productsList[producto].nombre : 'Nulo'}
+        </Text>
         <Text style={[titleTheme]}>Cantidad</Text>
         <Text style={[textTheme]}>{cantidad}</Text>
         <Text style={[titleTheme]}>Cliente</Text>
-        <Text style={[textTheme]}>{clientsList[cliente] ? clientsList[cliente].nombre : "Nulo"}</Text>
+        <Text style={[textTheme]}>
+          {clientsList[cliente] ? clientsList[cliente].nombre : 'Nulo'}
+        </Text>
       </View>
       <View style={[buttons]}>
         <MaterialIcons.Button
@@ -64,7 +68,7 @@ const SaleItem = ({
 
 const styles = StyleSheet.create({
   container: {
-    height: 300,
+    height: 350,
     width: '100%',
     alignSelf: 'center',
     alignItems: 'center',
