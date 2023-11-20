@@ -12,11 +12,7 @@ const Sales = () => {
     },
     {
       key: 'Select Client'
-    },
-    {
-      key: 'Invoice'
-    }
-    //,
+    } //,
     //{
     //  key: 'Edit Product'
     //}
