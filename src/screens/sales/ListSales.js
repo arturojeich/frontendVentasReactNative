@@ -23,6 +23,8 @@ const ListSales = ({ navigation }) => {
   const productsKey = Object.keys(productsList)
   const [salesList, setSalesList] = useState({})
   const salesKeys = Object.keys(salesList)
+  const [clientsList, setClientsList] = useState({})
+  const clientsKeys = Object.keys(clientsList)
 
   useEffect(() => {
     return onValue(
@@ -42,9 +44,20 @@ const ListSales = ({ navigation }) => {
         let data = querySnapShot.val() || {}
         let itemList = { ...data }
         setProductsList(itemList)
-      }
+      },
     )
   }, [])
+
+    useEffect(() => {
+        return onValue(
+          ref(dbFirebase, '/administracion/clientes'),
+          (querySnapShot) => {
+            let data = querySnapShot.val() || {}
+            let itemList = { ...data }
+            setClientsList(itemList)
+          },
+        )
+      }, [])
 
   validatePostSale = (newSale) => {
     if (newSale !== undefined && newSale !== null) {
@@ -138,6 +151,8 @@ function generateHTML(recordsArray) {
                   deleteFunction={removeSale}
                   productsList={productsList}
                   productsKey={productsKey}
+                  clientsList={clientsList}
+                  clientsKeys={clientsKeys}
                 />
               )
             })
@@ -158,7 +173,9 @@ function generateHTML(recordsArray) {
         extraData={{
           postFunction: postSale,
           productsList: productsList,
-          productsKey: productsKey
+          productsKey: productsKey,
+          clientsList: clientsList,
+          clientsKeys: clientsKeys
         }}
       />
       <TouchableOpacity

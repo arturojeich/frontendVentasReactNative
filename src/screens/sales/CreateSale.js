@@ -5,12 +5,15 @@ import DropDownList from '../../components/DropDownList'
 
 const CreateSale = ({ route, navigation }) => {
   let { extraData } = route.params
-  let { postFunction, productsList, productsKey } = extraData
+  let { postFunction, productsList, productsKey, clientsList, clientsKeys } = extraData
   const [product, setProduct] = useState('')
   const [newSale, setNewSale] = useState({})
+  const [client, setClient] = useState('')
+
 
   inputTextClear = () => {
     setProduct('')
+    setClient('')
     this.textInput1.clear()
     this.textInput2.clear()
     this.textInput3.clear()
@@ -22,6 +25,17 @@ const CreateSale = ({ route, navigation }) => {
       arr.push({
         value: key,
         label: `${productsList[key]?.nombre}`
+      })
+    })
+    return arr
+  }
+
+  function filterClients() {
+    let arr = []
+    clientsKeys.forEach((key) => {
+      arr.push({
+        value: key,
+        label: `${clientsList[key]?.nombre}`
       })
     })
     return arr
@@ -43,6 +57,21 @@ const CreateSale = ({ route, navigation }) => {
             placeholder={'Seleccione un Producto'}
           />
         ) : null}
+      </View>
+      <View style={CustomStyles.inputContainer}>
+          <Text style={[CustomStyles.label, { marginBottom: 10 }]}>
+            Cliente
+          </Text>
+          {clientsKeys.length > 0 ? (
+            <DropDownList
+              style={{ marginBottom: 70 }}
+              items={filterClients()}
+              value={client}
+              setValue={setClient}
+              zIndex={4000}
+              placeholder={'Seleccione un Cliente'}
+            />
+          ) : null}
       </View>
       <View style={CustomStyles.inputContainer}>
           <Text style={CustomStyles.label}>Número de Factura</Text>
@@ -87,9 +116,10 @@ const CreateSale = ({ route, navigation }) => {
             onPress={() => {
               const cantidad = parseInt(newSale.cantidad);
               const precio = parseInt(productsList[product].precio);
-              console.log(cantidad, precio)
-              console.log(typeof cantidad, typeof precio)
-              postFunction({ ...newSale, producto: product, total:(cantidad*precio) }),
+              //console.log(cantidad, precio)
+              //console.log(typeof cantidad, typeof precio)
+              //console.log(product)
+              postFunction({ ...newSale, producto: product, cliente: client, total:(cantidad*precio) }),
                 setNewSale({}),
                 inputTextClear()
             }}

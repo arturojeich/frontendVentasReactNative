@@ -10,7 +10,9 @@ const SaleItem = ({
   id,
   navigation,
   productsList,
-  productsKey
+  productsKey,
+  clientsList,
+  clientsKey
 }) => {
   const {
     container,
@@ -21,7 +23,7 @@ const SaleItem = ({
     data,
     elevation
   } = styles
-  const { nroFactura, fecha, total, producto, cantidad } = saleData
+  const { nroFactura, fecha, total, producto, cantidad, cliente } = saleData
 
   return (
     <View key={id} style={[container, shadowProp, elevation]}>
@@ -37,6 +39,8 @@ const SaleItem = ({
         <Text style={[textTheme]}>{productsList[producto] ? productsList[producto].nombre : "Nulo"}</Text>
         <Text style={[titleTheme]}>Cantidad</Text>
         <Text style={[textTheme]}>{cantidad}</Text>
+        <Text style={[titleTheme]}>Cliente</Text>
+        <Text style={[textTheme]}>{clientsList[cliente] ? clientsList[cliente].nombre : "Nulo"}</Text>
       </View>
       <View style={[buttons]}>
         <MaterialIcons.Button
@@ -60,7 +64,7 @@ const SaleItem = ({
 
 const styles = StyleSheet.create({
   container: {
-    height: 250,
+    height: 300,
     width: '100%',
     alignSelf: 'center',
     alignItems: 'center',
